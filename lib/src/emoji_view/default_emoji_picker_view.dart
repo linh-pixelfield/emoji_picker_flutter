@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 /// Default EmojiPicker Implementation
 class DefaultEmojiPickerView extends EmojiPickerView {
   /// Constructor
-  const DefaultEmojiPickerView(super.config, super.state, super.showSearchBar,
-      {super.key});
+  const DefaultEmojiPickerView(super.config, super.state, super.showSearchBar, {super.key});
 
   @override
   State<DefaultEmojiPickerView> createState() => _DefaultEmojiPickerViewState();
@@ -19,17 +18,13 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
 
   @override
   void initState() {
-    var initCategory = widget.state.categoryEmoji.indexWhere((element) =>
-        element.category == widget.config.categoryViewConfig.initCategory);
+    var initCategory = widget.state.categoryEmoji
+        .indexWhere((element) => element.category == widget.config.categoryViewConfig.initCategory);
     if (initCategory == -1) {
       initCategory = 0;
     }
-    _tabController = TabController(
-        initialIndex: initCategory,
-        length: widget.state.categoryEmoji.length,
-        vsync: this);
-    _pageController = PageController(initialPage: initCategory)
-      ..addListener(closeSkinToneOverlay);
+    _tabController = TabController(initialIndex: initCategory, length: widget.state.categoryEmoji.length, vsync: this);
+    _pageController = PageController(initialPage: initCategory)..addListener(closeSkinToneOverlay);
     _scrollController.addListener(closeSkinToneOverlay);
     super.initState();
   }
@@ -46,10 +41,8 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final emojiSize =
-            widget.config.emojiViewConfig.getEmojiSize(constraints.maxWidth);
-        final emojiBoxSize =
-            widget.config.emojiViewConfig.getEmojiBoxSize(constraints.maxWidth);
+        final emojiSize = widget.config.emojiViewConfig.getEmojiSize(constraints.maxWidth);
+        final emojiBoxSize = widget.config.emojiViewConfig.getEmojiBoxSize(constraints.maxWidth);
         return EmojiContainer(
           color: widget.config.emojiViewConfig.backgroundColor,
           buttonMode: widget.config.emojiViewConfig.buttonMode,
@@ -97,6 +90,11 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
 
   Widget _buildEmojiView(double emojiSize, double emojiBoxSize) {
     return Flexible(
+      child: TabBarView(
+          controller: _tabController,
+          children: widget.state.categoryEmoji.map((e) => _buildPage(emojiSize, emojiBoxSize, e)).toList()),
+    );
+    return Flexible(
       child: PageView.builder(
         itemCount: widget.state.categoryEmoji.length,
         controller: _pageController,
@@ -132,11 +130,9 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
           );
   }
 
-  Widget _buildPage(
-      double emojiSize, double emojiBoxSize, CategoryEmoji categoryEmoji) {
+  Widget _buildPage(double emojiSize, double emojiBoxSize, CategoryEmoji categoryEmoji) {
     // Display notice if recent has no entries yet
-    if (categoryEmoji.category == Category.RECENT &&
-        categoryEmoji.emoji.isEmpty) {
+    if (categoryEmoji.category == Category.RECENT && categoryEmoji.emoji.isEmpty) {
       return _buildNoRecent();
     }
     // Build page normally
@@ -156,8 +152,7 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
       itemBuilder: (context, index) {
         return addSkinToneTargetIfAvailable(
           hasSkinTone: categoryEmoji.emoji[index].hasSkinTone,
-          linkKey:
-              categoryEmoji.category.name + categoryEmoji.emoji[index].emoji,
+          linkKey: categoryEmoji.category.name + categoryEmoji.emoji[index].emoji,
           child: EmojiCell.fromConfig(
             emoji: categoryEmoji.emoji[index],
             emojiSize: emojiSize,
