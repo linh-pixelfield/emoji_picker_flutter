@@ -23,7 +23,11 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
     if (initCategory == -1) {
       initCategory = 0;
     }
-    _tabController = TabController(initialIndex: initCategory, length: widget.state.categoryEmoji.length, vsync: this);
+    _tabController = TabController(
+        initialIndex: initCategory,
+        length: widget.state.categoryEmoji.length,
+        vsync: this,
+        animationDuration: Duration.zero);
     _pageController = PageController(initialPage: initCategory)..addListener(closeSkinToneOverlay);
     _scrollController.addListener(closeSkinToneOverlay);
     super.initState();
@@ -89,11 +93,6 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
   }
 
   Widget _buildEmojiView(double emojiSize, double emojiBoxSize) {
-    return Flexible(
-      child: TabBarView(
-          controller: _tabController,
-          children: widget.state.categoryEmoji.map((e) => _buildPage(emojiSize, emojiBoxSize, e)).toList()),
-    );
     return Flexible(
       child: PageView.builder(
         itemCount: widget.state.categoryEmoji.length,
